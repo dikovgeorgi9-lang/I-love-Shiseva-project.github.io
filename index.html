@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Еко-Космос: Рециклиран Хардуер</title>
+    <style>
+        /* Космически дизайн (CSS) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0a0a28 0%, #020208 100%);
+            color: #e0e0ff;
+            overflow-x: hidden;
+            min-height: 200vh; /* За да има скролване */
+        }
+
+        /* Анимация, която следва скрола (Космически кораб/Хардуер) */
+        #space-follower {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00ffcc, #0077ff);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            box-shadow: 0 0 20px #00ffcc, inset 0 0 10px #ffffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1000;
+            transition: all 0.1s ease-out;
+        }
+
+        #space-follower::after {
+            content: 'CPU';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: bold;
+            color: #020208;
+        }
+
+        /* Заглавна част */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(10, 10, 40, 0.6);
+            border-bottom: 1px solid #00ffcc;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            color: #00ffcc;
+            font-size: 2.5rem;
+            text-shadow: 0 0 15px #00ffcc;
+            margin-bottom: 10px;
+        }
+
+        /* Основно съдържание */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Продукти / Галерия */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 100fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 230, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 230, 0.2);
+        }
+
+        .card h3 {
+            color: #00ffcc;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #b0b0d0;
+        }
+
+        /* Текстура от падащи звезди на заден план */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+    
+    <div id="space-follower"></div>
+
+    <header>
+        <h1>Галактическа Еко-Техника</h1>
+        <p>Вдъхваме нов живот на стария хардуер под звездите</p>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <p>Добре дошли в нашето космическо пространство! Ние превръщаме остарели компютърни компоненти, платки и пластмаса в уникални арт изделия и полезни аксесоари, намалявайки електронния отпадък на Земята.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Кибер Органайзери</h3>
+                <p>Кутии за моливи и инструменти, изработени от стари дънни платки и дефектни RAM памети. Перфектни за твоето бюро.</p>
+            </div>
+            <div class="card">
+                <h3>Космически Лампи</h3>
+                <p>Нощни лампи, направени от корпуси на стари захранвания (PSU) и охладители, които проектират съзвездия в стаята.</p>
+            </div>
+            <div class="card">
+                <h3>Планетарни Ключодържатели</h3>
+                <p>Миниатюрни кръгли детайли, изрязани от дефектни процесори и текстурирани като повърхността на непознати планети.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Интерактивна анимация (JavaScript)
+        const follower = document.getElementById('space-follower');
+        let targetX = window.innerWidth / 2;
+        let targetY = window.innerHeight / 2;
+        let currentX = targetX;
+        let currentY = targetY;
+
+        // Следене на мишката
+        window.addEventListener('mousemove', (e) => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+        });
+
+        // Ефект при скролване - променя формата и позицията според скоростта
+        window.addEventListener('scroll', () => {
+            const scrollSpeed = window.scrollY * 0.05;
+            follower.style.borderRadius = `${30 + (scrollSpeed % 40)}% ${70 - (scrollSpeed % 30)}% ${70 - (scrollSpeed % 20)}% ${30 + (scrollSpeed % 30)}%`;
+            follower.style.transform = `translate(-50%, -50%) rotate(${window.scrollY * 0.2}deg)`;
+        });
+
+        // Плавна интерполация за движението (плаващ космически ефект)
+        function animate() {
+            currentX += (targetX - currentX) * 0.1;
+            currentY += (targetY - currentY) * 0.1;
+            
+            follower.style.left = `${currentX}px`;
+            follower.style.top = `${currentY}px`;
+            
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
