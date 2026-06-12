@@ -1,197 +1,450 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Еко-Космос: Рециклиран Хардуер</title>
-    <style>
-        /* Космически дизайн (CSS) */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Изделия от рециклирани компютърни компоненти — материали, проекти и GPU части за нов живот на старата техника.">
+<title>EcoTechRe — Втори живот за компютрите</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e0b;
+  --card:#121810;
+  --card-hover:#182018;
+  --border:rgba(255,255,255,.07);
+  --border-hover:rgba(255,255,255,.16);
+  --accent:#A3D65C;
+  --accent-2:#38B88B;
+  --text:#EDF3E6;
+  --muted:#8B9A86;
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background-color:var(--bg);
+  background-image:radial-gradient(circle at 1px 1px, rgba(255,255,255,.05) 1px, transparent 0);
+  background-size:34px 34px;
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;}
 
-        body {
-            background: radial-gradient(circle at center, #0a0a28 0%, #020208 100%);
-            color: #e0e0ff;
-            overflow-x: hidden;
-            min-height: 200vh; /* За да има скролване */
-        }
+/* cursor */
+.cursor{position:fixed;top:0;left:0;width:30px;height:30px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s,background .2s;z-index:9999;mix-blend-mode:difference;}
+.cursor-dot{position:fixed;top:0;left:0;width:5px;height:5px;background:var(--accent);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);z-index:9999;}
+.cursor.hover{width:56px;height:56px;background:rgba(163,214,92,.12);border-color:var(--accent-2);}
 
-        /* Анимация, която следва скрола (Космически кораб/Хардуер) */
-        #space-follower {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #00ffcc, #0077ff);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            box-shadow: 0 0 20px #00ffcc, inset 0 0 10px #ffffff;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 1000;
-            transition: all 0.1s ease-out;
-        }
+/* header / nav */
+header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;backdrop-filter:blur(12px);background:rgba(10,14,11,.65);border-bottom:1px solid var(--border);}
+.logo{font-weight:600;font-size:1.15rem;letter-spacing:.5px;}
+.logo span{color:var(--accent-2);}
+nav{position:relative;display:flex;gap:.25rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none;}
+.nav-pill{position:absolute;top:0;left:0;height:100%;background:var(--accent);border-radius:50px;transition:transform .4s cubic-bezier(.65,0,.35,1),width .4s cubic-bezier(.65,0,.35,1);z-index:0;}
+.nav-btn{position:relative;z-index:1;background:none;border:none;padding:.6rem 1.1rem;font-family:'Inter',sans-serif;font-size:.88rem;color:var(--muted);cursor:none;white-space:nowrap;border-radius:50px;transition:color .25s;}
+.nav-btn:hover{color:var(--text);}
+.nav-btn.active{color:#0a0e0b;font-weight:500;}
 
-        #space-follower::after {
-            content: 'CPU';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10px;
-            font-weight: bold;
-            color: #020208;
-        }
+/* pages */
+.page{display:none;padding:7.5rem 2rem 4rem;max-width:1100px;margin:0 auto;min-height:100vh;}
+.page.active{display:block;animation:pageIn .6s cubic-bezier(.16,1,.3,1) both;}
+@keyframes pageIn{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
 
-        /* Заглавна част */
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            background: rgba(10, 10, 40, 0.6);
-            border-bottom: 1px solid #00ffcc;
-            backdrop-filter: blur(10px);
-        }
+/* home */
+#page-home.active{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;max-width:none;}
+#page-home::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(163,214,92,.18),transparent 70%);top:-150px;right:-200px;border-radius:50%;filter:blur(50px);animation:float 14s ease-in-out infinite;z-index:-1;}
+#page-home::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(56,184,139,.15),transparent 70%);bottom:-100px;left:-180px;border-radius:50%;filter:blur(50px);animation:float 18s ease-in-out infinite reverse;z-index:-1;}
+@keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,40px);}}
+.hero-tag{display:inline-block;padding:.35rem 1rem;border:1px solid var(--border);border-radius:50px;font-size:.8rem;color:var(--accent-2);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s ease forwards .1s;}
+#page-home h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:600;max-width:880px;line-height:1.15;opacity:0;animation:fadeUp .8s ease forwards .25s;}
+#page-home h1 span{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+#page-home>p{max-width:600px;margin-top:1.3rem;color:var(--muted);font-size:1.08rem;opacity:0;animation:fadeUp .8s ease forwards .4s;}
+.cta-row{margin-top:2.2rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .8s ease forwards .55s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.btn{padding:.9rem 1.9rem;border-radius:50px;font-size:.95rem;font-family:'Inter',sans-serif;cursor:none;transition:transform .25s,box-shadow .25s;border:1px solid transparent;}
+.btn-primary{background:var(--accent);color:#0a0e0b;font-weight:600;}
+.btn-outline{border-color:var(--border);color:var(--text);background:transparent;}
+.btn:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(163,214,92,.18);}
 
-        header h1 {
-            color: #00ffcc;
-            font-size: 2.5rem;
-            text-shadow: 0 0 15px #00ffcc;
-            margin-bottom: 10px;
-        }
+.stats-row{display:flex;gap:2.5rem;margin-top:3.5rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .8s ease forwards .7s;}
+.stat{text-align:center;}
+.stat .num{font-size:2rem;font-weight:600;font-family:'Space Grotesk',sans-serif;color:var(--accent);}
+.stat .lbl{font-size:.82rem;color:var(--muted);margin-top:.2rem;}
 
-        /* Основно съдържание */
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+/* section title */
+.section-title{margin-bottom:2.5rem;}
+.section-title .tag{display:inline-block;color:var(--accent-2);font-size:.8rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:.6rem;}
+.section-title h2{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:600;}
+.section-title p{color:var(--muted);margin-top:.6rem;max-width:620px;}
 
-        .intro {
-            text-align: center;
-            margin-bottom: 60px;
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
+/* grid + cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.25rem;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.7rem;transition:transform .35s,border-color .35s,background .35s;cursor:none;}
+.card:hover{transform:translateY(-6px);border-color:var(--border-hover);background:var(--card-hover);}
+.card .icon{width:46px;height:46px;border-radius:12px;background:rgba(163,214,92,.1);display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:1.1rem;transition:transform .35s;}
+.card:hover .icon{transform:rotate(-8deg) scale(1.08);}
+.card h3{font-size:1.05rem;font-weight:600;margin-bottom:.4rem;}
+.card p{font-size:.92rem;color:var(--muted);}
 
-        /* Продукти / Галерия */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 100fr));
-            gap: 30px;
-        }
+/* steps */
+.steps{display:flex;flex-direction:column;margin-top:1rem;}
+.step{display:flex;gap:1.5rem;padding:1.5rem 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step .num{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:600;color:var(--accent);min-width:54px;}
+.step h4{font-size:1.05rem;font-weight:600;margin-bottom:.3rem;}
+.step p{color:var(--muted);font-size:.94rem;}
 
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(0, 255, 230, 0.2);
-            border-radius: 12px;
-            padding: 25px;
-            transition: transform 0.3s, border-color 0.3s;
-        }
+/* calculator */
+.calc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:540px;}
+.calc label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:.5rem;}
+.calc input[type=range]{width:100%;margin-bottom:1.5rem;accent-color:var(--accent);}
+.calc .result{background:rgba(163,214,92,.08);border:1px solid rgba(163,214,92,.22);border-radius:10px;padding:1rem;font-size:.95rem;color:var(--accent);margin-bottom:.7rem;}
+.calc .result:last-child{margin-bottom:0;}
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: #00ffcc;
-            box-shadow: 0 0 15px rgba(0, 255, 230, 0.2);
-        }
+footer{text-align:center;padding:2.5rem 1.5rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);}
+footer span{color:var(--accent-2);}
 
-        .card h3 {
-            color: #00ffcc;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
 
-        .card p {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: #b0b0d0;
-        }
-
-        /* Текстура от падащи звезди на заден план */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
-            background-size: 550px 550px, 350px 350px;
-            background-position: 0 0, 40px 60px;
-            opacity: 0.4;
-        }
-    </style>
+@media (max-width:768px){
+  .cursor,.cursor-dot{display:none;}
+  header{padding:.9rem 1.2rem;}
+  .page{padding:6.5rem 1.2rem 3rem;}
+  .stats-row{gap:1.5rem;}
+}
+</style>
 </head>
 <body>
 
-    <div class="stars"></div>
-    
-    <div id="space-follower"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
 
-    <header>
-        <h1>Галактическа Еко-Техника</h1>
-        <p>Вдъхваме нов живот на стария хардуер под звездите</p>
-    </header>
+<header>
+  <div class="logo">EcoTech<span>Re</span></div>
+  <nav id="nav">
+    <div class="nav-pill" id="navPill"></div>
+    <button class="nav-btn active" data-page="home">Начало</button>
+    <button class="nav-btn" data-page="materiali">Материали</button>
+    <button class="nav-btn" data-page="produkti">Продукти</button>
+    <button class="nav-btn" data-page="gpu">GPU части</button>
+    <button class="nav-btn" data-page="kak">Как</button>
+    <button class="nav-btn" data-page="kalkulator">Калкулатор</button>
+  </nav>
+</header>
 
-    <div class="container">
-        <div class="intro">
-            <p>Добре дошли в нашето космическо пространство! Ние превръщаме остарели компютърни компоненти, платки и пластмаса в уникални арт изделия и полезни аксесоари, намалявайки електронния отпадък на Земята.</p>
-        </div>
+<div id="app">
 
-        <div class="grid">
-            <div class="card">
-                <h3>Кибер Органайзери</h3>
-                <p>Кутии за моливи и инструменти, изработени от стари дънни платки и дефектни RAM памети. Перфектни за твоето бюро.</p>
-            </div>
-            <div class="card">
-                <h3>Космически Лампи</h3>
-                <p>Нощни лампи, направени от корпуси на стари захранвания (PSU) и охладители, които проектират съзвездия в стаята.</p>
-            </div>
-            <div class="card">
-                <h3>Планетарни Ключодържатели</h3>
-                <p>Миниатюрни кръгли детайли, изрязани от дефектни процесори и текстурирани като повърхността на непознати планети.</p>
-            </div>
-        </div>
+  <section class="page active" id="page-home" data-page="home">
+    <span class="hero-tag">Учебен проект · рециклиране на техника</span>
+    <h1>Дай <span>втори живот</span> на старите компютри</h1>
+    <p>Идеи, материали и проекти за изделия, направени от рециклирани компютърни компоненти — от платки до GPU.</p>
+    <div class="cta-row">
+      <button class="btn btn-primary" data-goto="produkti">Разгледай идеите</button>
+      <button class="btn btn-outline" data-goto="gpu">GPU и хардуер</button>
     </div>
+    <div class="stats-row">
+      <div class="stat"><div class="num">6</div><div class="lbl">категории материали</div></div>
+      <div class="stat"><div class="num">12+</div><div class="lbl">проектни идеи</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">рециклируема техника</div></div>
+    </div>
+  </section>
 
-    <script>
-        // Интерактивна анимация (JavaScript)
-        const follower = document.getElementById('space-follower');
-        let targetX = window.innerWidth / 2;
-        let targetY = window.innerHeight / 2;
-        let currentX = targetX;
-        let currentY = targetY;
+  <section class="page" id="page-materiali" data-page="materiali">
+    <div class="section-title reveal">
+      <span class="tag">Суровини</span>
+      <h2>От какво се правят?</h2>
+      <p>Всеки компютър съдържа десетки материали, които могат да получат нов живот.</p>
+    </div>
+    <div class="grid">
+      <div class="card reveal">
+        <div class="icon">⚙</div>
+        <h3>Алуминиеви корпуси</h3>
+        <p>Кутиите на старите компютри и лаптопи се претопяват или нарязват за рамки, стойки и декорация.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🔌</div>
+        <h3>Печатни платки (PCB)</h3>
+        <p>Старите платки стават уникални декоративни елементи — рамки за снимки, бижута, подложки.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🧩</div>
+        <h3>Клавиатури и корпуси</h3>
+        <p>Пластмасовите части се топят и превръщат в нови продукти — органайзери, поставки, играчки.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🧵</div>
+        <h3>Меден кабел</h3>
+        <p>Извлеченият мед от кабели се използва повторно за нови електронни компоненти и бижута.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🖥</div>
+        <h3>Екрани и монитори</h3>
+        <p>Стъклото от стари монитори може да се преработи за нови дисплеи или декоративни панели.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">💾</div>
+        <h3>Процесори и чипове</h3>
+        <p>Старите чипове често се ползват за арт проекти — мозайки, ключодържатели, магнити.</p>
+      </div>
+    </div>
+  </section>
 
-        // Следене на мишката
-        window.addEventListener('mousemove', (e) => {
-            targetX = e.clientX;
-            targetY = e.clientY;
-        });
+  <section class="page" id="page-produkti" data-page="produkti">
+    <div class="section-title reveal">
+      <span class="tag">Проекти</span>
+      <h2>Идеи за продукти</h2>
+      <p>Готови концепции, които може да направиш у дома с малко инструменти.</p>
+    </div>
+    <div class="grid">
+      <div class="card reveal">
+        <div class="icon">📱</div>
+        <h3>Поставка за телефон</h3>
+        <p>Изрязана и сгъната стара печатна платка, превърната в стойка за смартфон или таблет.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">💡</div>
+        <h3>Лампа от компютърен корпус</h3>
+        <p>Старо кутие на компютър, преобразено в настолна лампа с LED осветление вътре.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">💎</div>
+        <h3>Бижута от чипове</h3>
+        <p>Обеци, висулки и гривни, изработени от малки електронни компоненти.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🗂</div>
+        <h3>Органайзер за бюро</h3>
+        <p>Кутии от твърди дискове, превърнати в отделения за химикалки, кламери и USB флашки.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">⏰</div>
+        <h3>Часовник от хард диск</h3>
+        <p>Дискът на стар HDD става циферблат на стенен часовник с механизъм отвътре.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🖼</div>
+        <h3>Рамка за снимка</h3>
+        <p>Рамка, изработена от парчета пластмасов корпус и кабели, оформени декоративно.</p>
+      </div>
+    </div>
+  </section>
 
-        // Ефект при скролване - променя формата и позицията според скоростта
-        window.addEventListener('scroll', () => {
-            const scrollSpeed = window.scrollY * 0.05;
-            follower.style.borderRadius = `${30 + (scrollSpeed % 40)}% ${70 - (scrollSpeed % 30)}% ${70 - (scrollSpeed % 20)}% ${30 + (scrollSpeed % 30)}%`;
-            follower.style.transform = `translate(-50%, -50%) rotate(${window.scrollY * 0.2}deg)`;
-        });
+  <section class="page" id="page-gpu" data-page="gpu">
+    <div class="section-title reveal">
+      <span class="tag">Рециклирана техника</span>
+      <h2>Втори живот за GPU и хардуерни части</h2>
+      <p>Видеокартите и вътрешните компоненти на компютъра са пълни с метал, мед и работещи части за нови проекти.</p>
+    </div>
+    <div class="grid">
+      <div class="card reveal">
+        <div class="icon">🎮</div>
+        <h3>Видеокарти (GPU)</h3>
+        <p>Изправните чипове и платки от стари видеокарти се вграждат в нови охладителни системи или арт инсталации, а повредените стават декоративни панели.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🧠</div>
+        <h3>RAM модули</h3>
+        <p>Лентите памет се нарязват на малки плочки за ключодържатели, магнити и колекционерски комплекти.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🔋</div>
+        <h3>Захранващи блокове (PSU)</h3>
+        <p>Металните кутии на захранванията се превръщат в органайзери за инструменти или малки зарядни станции.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🌀</div>
+        <h3>Вентилатори</h3>
+        <p>Вентилаторите от GPU и процесори стават USB вентилатори, мини турбини за декорация или охлаждащи стойки.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">❄</div>
+        <h3>Алуминиеви радиатори</h3>
+        <p>Охладителите от видеокартите се използват като пасивни радиатори за нови мини проекти или поставки за лаптопи.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🔗</div>
+        <h3>Кабели и конектори</h3>
+        <p>PCIe, SATA и захранващите кабели се преплитат в гривни, каишки за ключове и декоративни елементи.</p>
+      </div>
+    </div>
+  </section>
 
-        // Плавна интерполация за движението (плаващ космически ефект)
-        function animate() {
-            currentX += (targetX - currentX) * 0.1;
-            currentY += (targetY - currentY) * 0.1;
-            
-            follower.style.left = `${currentX}px`;
-            follower.style.top = `${currentY}px`;
-            
-            requestAnimationFrame(animate);
-        }
-        animate();
-    </script>
+  <section class="page" id="page-kak" data-page="kak">
+    <div class="section-title reveal">
+      <span class="tag">Ръководство</span>
+      <h2>Как да започнем у дома</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="num">01</div>
+        <div>
+          <h4>Събери стара техника</h4>
+          <p>Потърси неработещи компютри, клавиатури, мишки и кабели у дома или при познати.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="num">02</div>
+        <div>
+          <h4>Разглоби внимателно</h4>
+          <p>Отдели платки, метални части, пластмаса и кабели. Бъди внимателен с остри ръбове.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="num">03</div>
+        <div>
+          <h4>Тествай и обезопаси</h4>
+          <p>Провери кои платки, GPU и вентилатори все още работят. Разтовари кондензаторите в захранванията, преди да ги отваряш.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="num">04</div>
+        <div>
+          <h4>Избери идея</h4>
+          <p>Реши какво искаш да направиш — поставка, лампа, органайзер или арт проект.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="num">05</div>
+        <div>
+          <h4>Сглоби и довърши</h4>
+          <p>Използвай лепило, винтове или прости инструменти, за да съединиш частите.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-kalkulator" data-page="kalkulator">
+    <div class="section-title reveal">
+      <span class="tag">Инструмент</span>
+      <h2>Колко изделия можеш да направиш?</h2>
+    </div>
+    <div class="calc reveal">
+      <label for="brComputers">Брой стари компютри: <span id="valOut">3</span></label>
+      <input type="range" id="brComputers" min="0" max="20" value="3" step="1">
+      <div class="result" id="output1"></div>
+      <div class="result" id="output2"></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Учебен проект — изделия от рециклируеми материали, свързани с компютри · <span>EcoTechRe</span> 2026
+</footer>
+
+<script>
+  /* cursor follower */
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursorDot');
+  let mouseX = 0, mouseY = 0, curX = 0, curY = 0;
+
+  window.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top = mouseY + 'px';
+  });
+
+  function animateCursor(){
+    curX += (mouseX - curX) * 0.15;
+    curY += (mouseY - curY) * 0.15;
+    cursor.style.left = curX + 'px';
+    cursor.style.top = curY + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  function bindHover(){
+    document.querySelectorAll('a, button, .card, input').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+  }
+  bindHover();
+
+  /* nav pill + page router */
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const navPill = document.getElementById('navPill');
+  const pages = document.querySelectorAll('.page');
+
+  function movePill(btn){
+    if(!btn) return;
+    navPill.style.width = btn.offsetWidth + 'px';
+    navPill.style.height = btn.offsetHeight + 'px';
+    navPill.style.transform = 'translateX(' + btn.offsetLeft + 'px)';
+  }
+
+  function showPage(id, push){
+    const target = document.getElementById('page-' + id);
+    if(!target) return;
+    pages.forEach(p => p.classList.remove('active'));
+    target.classList.add('active');
+    navBtns.forEach(b => {
+      const isActive = b.dataset.page === id;
+      b.classList.toggle('active', isActive);
+      if(isActive){
+        b.setAttribute('aria-current', 'page');
+        movePill(b);
+      } else {
+        b.removeAttribute('aria-current');
+      }
+    });
+    window.scrollTo(0, 0);
+    if(push !== false) history.pushState({page: id}, '', '#' + id);
+  }
+
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(!btn.classList.contains('active')) showPage(btn.dataset.page, true);
+    });
+  });
+
+  document.querySelectorAll('[data-goto]').forEach(btn => {
+    btn.addEventListener('click', () => showPage(btn.dataset.goto, true));
+  });
+
+  window.addEventListener('popstate', e => {
+    const id = (e.state && e.state.page) || location.hash.slice(1) || 'home';
+    showPage(id, false);
+  });
+
+  window.addEventListener('resize', () => {
+    movePill(document.querySelector('.nav-btn.active'));
+  });
+
+  const initial = location.hash.slice(1) || 'home';
+  showPage(initial, false);
+  window.addEventListener('load', () => movePill(document.querySelector('.nav-btn.active')));
+
+  /* scroll reveal */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* calculator */
+  const slider = document.getElementById('brComputers');
+  const valOut = document.getElementById('valOut');
+  const out1 = document.getElementById('output1');
+  const out2 = document.getElementById('output2');
+
+  function updateCalc(){
+    const n = parseInt(slider.value) || 0;
+    valOut.textContent = n;
+    out1.textContent = n + ' компютър(а) → приблизително ' + (n*2) + ' малки изделия (поставки, бижута, магнити, рамки)';
+    out2.textContent = 'включително около ' + n + ' комплекта GPU/хардуерни части за охладители, вентилатори и кабелни проекти';
+  }
+  slider.addEventListener('input', updateCalc);
+  updateCalc();
+</script>
+
 </body>
 </html>
